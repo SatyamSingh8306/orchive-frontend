@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f4efe6;
+  --paper-2: #ece5d6;
+  --ink: #0b0b0f;
+  --ink-2: #1c1c22;
+  --graphite: #5c5750;
+  --rule: #0b0b0f;
+  --rule-soft: rgba(11, 11, 15, 0.12);
+  --blueprint: #1a3a8a;
+  --blueprint-soft: rgba(26, 58, 138, 0.08);
+  --accent: #ff4d1f;
+  --accent-soft: rgba(255, 77, 31, 0.12);
+  --ok: #1f7a3a;
+  --warn: #b15a00;
+  --foreground: #0b0b0f;
+  --background: #f4efe6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter-tight), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b0b0f;
+    --foreground: #f4efe6;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-inter-tight), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Blueprint paper: cyan grid + soft noise */
+.paper {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(26, 58, 138, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 58, 138, 0.08) 1px, transparent 1px),
+    linear-gradient(to right, rgba(26, 58, 138, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 58, 138, 0.04) 1px, transparent 1px);
+  background-size:
+    128px 128px,
+    128px 128px,
+    32px 32px,
+    32px 32px;
+  background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  position: relative;
+}
+
+.paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.04 0 0 0 0 0.04 0 0 0 0 0.05 0 0 0 0.55 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>");
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+}
+
+/* Hairline rule helpers */
+.hairline {
+  border-color: var(--rule);
+}
+.hairline-soft {
+  border-color: var(--rule-soft);
+}
+
+/* Display headline */
+.display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-feature-settings: "ss01" on, "ss02" on;
+}
+
+.display-tight {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+}
+
+.mono {
+  font-family: var(--font-jetbrains), ui-monospace, "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.eyebrow {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+/* Grid canvas (workflow canvas) */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, #e4dccb 1px, transparent 1px),
+    linear-gradient(to bottom, #e4dccb 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Animations */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 60s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.85); }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes draw-stroke {
+  from { stroke-dashoffset: 600; }
+  to   { stroke-dashoffset: 0; }
+}
+.draw-stroke {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw-stroke 1.6s ease-out forwards;
+}
+
+@keyframes draw-stroke-fast {
+  from { stroke-dashoffset: 200; }
+  to   { stroke-dashoffset: 0; }
+}
+.draw-stroke-fast {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw-stroke-fast 0.9s ease-out forwards;
+}
+
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  animation: reveal-up 0.7s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.animate-blink {
+  animation: blink 1.05s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.animate-caret-blink {
+  animation: caret-blink 1.05s steps(1) infinite;
+}
+
+@keyframes scan {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+.scan-line {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, rgba(255, 77, 31, 0.08), transparent);
+  animation: scan 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 24s linear infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-10px); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Markdown prose */
+.prose { color: #ffffff; max-width: none; }
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 { color: #ffffff; font-weight: 600; }
+.prose p { color: #ffffff; margin-bottom: 1rem; }
+.prose ul, .prose ol { color: #ffffff; }
+.prose li { color: #ffffff; }
+.prose blockquote { color: #ffffff; border-left-color: #2ee4ff; }
+.prose code { color: #ffffff; background-color: rgba(46, 228, 255, 0.1); }
+.prose pre { background-color: #05001b; border-color: rgba(255, 255, 255, 0.1); }
+.prose pre code { color: #ffffff; background-color: transparent; }
+.prose a { color: #2ee4ff; }
+.prose a:hover { text-decoration: underline; }
+.prose table { border-color: rgba(255, 255, 255, 0.1); }
+.prose th { background-color: #0e123c; color: #ffffff; border-color: rgba(255, 255, 255, 0.1); }
+.prose td { color: #ffffff; border-color: rgba(255, 255, 255, 0.1); }
+.prose strong { color: #ffffff; font-weight: 600; }
+.prose em { color: #ffffff; font-style: italic; }
+
+textarea { scrollbar-width: none; -ms-overflow-style: none; }
+textarea::-webkit-scrollbar { display: none; }
+.overflow-y-auto::-webkit-scrollbar { display: none; }
+.overflow-y-auto { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* ---- Chat surface -------------------------------------------------- */
+
+/* Slim scrollbar for the message list (kept visible — chat is the
+   primary scrolling surface, so a thin scrollbar is the right call). */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink) transparent;
+}
+.chat-scroll::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: var(--ink);
+  border-radius: 0;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Shimmer skeleton — used by the sidebar list and the empty
+   conversation loading state. */
+@keyframes shimmer {
+  0% { background-position: -150% 0; }
+  100% { background-position: 150% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--rule-soft) 0%,
+    var(--paper-2) 50%,
+    var(--rule-soft) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* Subtle "new messages" pill slide-in. */
+@keyframes pill-rise {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.chat-new-pill {
+  animation: pill-rise 180ms ease-out both;
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .shimmer,
+  .animate-pulse-dot,
+  .animate-blink,
+  .animate-caret-blink,
+  .animate-ticker,
+  .animate-spin-slow,
+  .animate-bounce-slow,
+  .reveal,
+  .draw-stroke,
+  .draw-stroke-fast,
+  .scan-line,
+  .chat-new-pill {
+    animation: none !important;
+  }
+}

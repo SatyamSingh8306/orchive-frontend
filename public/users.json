@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@sasefied.com",
+    "password": "admin123",
+    "name": "Administrator",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "username": "john_doe",
+    "email": "john@sasefied.com",
+    "password": "user123",
+    "name": "John Doe",
+    "role": "user"
+  },
+  {
+    "id": 3,
+    "username": "jane_smith",
+    "email": "jane@sasefied.com",
+    "password": "user123",
+    "name": "Jane Smith",
+    "role": "user"
+  }
+]
