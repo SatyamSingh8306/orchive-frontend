@@ -4,6 +4,8 @@ import { Children, isValidElement } from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import AppHeader from '@/components/app-shell/AppHeader';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import api from '@/lib/axios';
 
 interface Agent {
@@ -334,6 +336,8 @@ export default function TryAgentPage() {
                     ) : (
                       <div className="max-w-none text-[var(--ink)]">
                         <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          rehypePlugins={[rehypeRaw]}
                           components={{
                             // The LLM frequently emits block content
                             // (fenced code, tables) inside a paragraph
