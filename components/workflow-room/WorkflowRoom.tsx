@@ -39,7 +39,7 @@ export default function WorkflowRoom({ workflowId }: WorkflowRoomProps) {
         const { data } = await api.get('/workflow-chats', {
           params: { workflowId },
         });
-        setMessages(data?.data || []);
+        setMessages(data || []);
       } catch (error) {
         console.error('Failed to load chat history:', error);
       }
@@ -51,7 +51,7 @@ export default function WorkflowRoom({ workflowId }: WorkflowRoomProps) {
       try {
         const { data } = await api.get(`/conflicts/user/${user.email}`);
         const userWorkflowConflicts =
-          data?.data?.filter(
+          (data || []).filter(
             (conflict: any) =>
               conflict.workflowId === workflowId &&
               conflict.ownerEmail === user.email,
@@ -167,10 +167,9 @@ export default function WorkflowRoom({ workflowId }: WorkflowRoomProps) {
 
     try {
       await api.post('/conflicts/respond', {
-        queryId,
         response,
         adminEmail: user.email,
-      });
+      }, { params: { queryId } });
 
       setConflicts(prev =>
         prev.map(c =>
@@ -204,7 +203,7 @@ export default function WorkflowRoom({ workflowId }: WorkflowRoomProps) {
     try {
       const { data } = await api.post('/workflow-chats', messageData);
       if (data) {
-        setMessages(prev => [...prev, data.data]);
+        setMessages(prev => [...prev, data]);
         setNewMessage('');
 
         if (textareaRef.current) {
