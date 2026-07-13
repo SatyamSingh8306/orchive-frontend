@@ -248,13 +248,6 @@ export default function AgentMaker() {
 
   const workflows = workflowsState;
 
-  const workflowCategories = [
-    { name: 'Supply Chain', glyph: 'SC', color: 'border-[var(--ink)] text-[var(--ink)]' },
-    { name: 'Process', glyph: 'PR', color: 'border-[var(--ink)] text-[var(--ink)]' },
-    { name: 'Client', glyph: 'CL', color: 'border-[var(--ink)] text-[var(--ink)]' },
-    { name: 'Optimization', glyph: 'OP', color: 'border-[var(--ink)] text-[var(--ink)]' },
-  ];
-
   const exportWorkflowToSvg = () => {
     const padding = 80;
     const minX = Math.min(...nodes.map(n => n.x), 0) - padding;
@@ -433,6 +426,13 @@ export default function AgentMaker() {
       console.error('Compile error:', err);
     } finally {
       setIsCompiling(false);
+    }
+  };
+
+  const handleEvaluate = () => {
+    const workflowId = selectedWorkflow;
+    if (workflowId) {
+      router.push(`/evaluations/${workflowId}`);
     }
   };
 
@@ -982,18 +982,14 @@ export default function AgentMaker() {
                   </button>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {workflowCategories.map(category => (
-                    <span
-                      key={category.name}
-                      className={`mono inline-flex items-center gap-2 border bg-[var(--paper)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${category.color}`}
-                    >
-                      <span className="border border-[var(--ink)] bg-[var(--paper-2)] px-1.5 text-[9px]">
-                        {category.glyph}
-                      </span>
-                      <span>{category.name}</span>
-                    </span>
-                  ))}
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={handleEvaluate}
+                    disabled={!selectedWorkflow}
+                    className="mono inline-flex items-center gap-2 border border-[var(--ink)] bg-[var(--paper)] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--ink)] transition-colors hover:bg-[var(--ink)] hover:text-[var(--paper)] disabled:opacity-50"
+                  >
+                    Evaluate →
+                  </button>
                 </div>
               </div>
             </div>

@@ -153,23 +153,55 @@ export default function WorkflowCanvas({
             const end = getPortPosition(toNode, 'left');
             const path = calculateEdgePath(start, end);
             const arrowPoints = getArrowPoints(end, start);
+            const midX = (start.x + end.x) / 2;
+            const midY = (start.y + end.y) / 2;
+
+            const deleteEdge = () => onDeleteEdge && onDeleteEdge(edge.id);
 
             return (
-              <g key={edge.id}>
+              <g key={edge.id} className="group">
                 <path
                   d={path}
                   fill="none"
                   stroke="var(--ink)"
                   strokeWidth={1.5}
                   strokeLinecap="square"
-                  className="cursor-pointer hover:stroke-[var(--accent)]"
-                  onClick={() => onDeleteEdge && onDeleteEdge(edge.id)}
+                  className="pointer-events-none group-hover:stroke-[var(--accent)]"
                 />
                 <polygon
                   points={arrowPoints}
                   fill="var(--ink)"
                   className="pointer-events-none"
                 />
+                {/* Fat invisible hit-area so the thin line is easy to click. */}
+                <path
+                  d={path}
+                  fill="none"
+                  stroke="transparent"
+                  strokeWidth={14}
+                  style={{ pointerEvents: 'stroke', cursor: 'pointer' }}
+                  onMouseDown={e => e.stopPropagation()}
+                  onClick={deleteEdge}
+                />
+                {/* Delete affordance shown on hover (matches the node ×). */}
+                <g
+                  transform={`translate(${midX}, ${midY})`}
+                  className="opacity-0 group-hover:opacity-100"
+                  style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                  onMouseDown={e => e.stopPropagation()}
+                  onClick={deleteEdge}
+                >
+                  <circle r={9} fill="var(--paper)" stroke="var(--accent)" strokeWidth={1.5} />
+                  <text
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fontSize={13}
+                    stroke="none"
+                    fill="var(--accent)"
+                  >
+                    ×
+                  </text>
+                </g>
               </g>
             );
           })}
@@ -196,7 +228,10 @@ export default function WorkflowCanvas({
           })()}
         </svg>
 
-        <div className="absolute inset-0" style={{ width: worldWidth, height: worldHeight }}>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ width: worldWidth, height: worldHeight }}
+        >
           {uniqueNodes.map(node => (
             <NodeCard
               key={node.id}
