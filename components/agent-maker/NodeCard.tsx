@@ -64,7 +64,7 @@ export default function NodeCard({
     <div
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
-      className="absolute select-none cursor-move"
+      className="pointer-events-auto absolute select-none cursor-move"
       style={{
         // Defensive defaults: the backend's `WorkflowNode` schema
         // doesn't round-trip `x` / `y` (or `icon` / `accentColor`

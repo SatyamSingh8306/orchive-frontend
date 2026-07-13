@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { FiGrid, FiList, FiMessageSquare } from 'react-icons/fi';
+import { FiGrid, FiList, FiMessageSquare, FiCheckSquare } from 'react-icons/fi';
 import { useWorkflowSelection } from './WorkflowContext';
 import { useState, useEffect } from 'react';
 import api from '@/lib/axios'; // Global axios instance
@@ -70,12 +70,9 @@ export default function AppSidebar() {
           })
         );
         setUserWorkflows(list);
-      } catch (error: any) {
+      } catch (error) {
         console.error('Failed to load workflows:', error);
-        // Handle 401 if needed
-        if (error.response?.status === 401) {
-          // The global api instance should handle this via interceptor
-        }
+        // 401 is handled by the global api interceptor
       }
     };
 
@@ -106,6 +103,7 @@ export default function AppSidebar() {
         <nav className="space-y-1.5">
           <NavItem href="/dashboard" label="Dashboard" icon={<FiGrid />} />
           <NavItem href="/chats" label="Chats" icon={<FiMessageSquare />} />
+          <NavItem href="/evaluations" label="Evaluations" icon={<FiCheckSquare />} />
           <NavItem href="/data-logs" label="Data Logs" icon={<FiList />} />
         </nav>
       </div>
